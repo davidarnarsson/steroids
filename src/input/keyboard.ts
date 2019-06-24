@@ -4,7 +4,6 @@ document.addEventListener("keydown", handleDown);
 document.addEventListener("keyup", handleUp);
 
 function handleDown(e: KeyboardEvent) {
-  
   keyboard[e.key] = true;
 }
 

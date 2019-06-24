@@ -1,4 +1,5 @@
 import { zip } from "lodash";
+import { Position, IShaped } from "./types";
 import { Vector } from "./vector";
 
 export class Shape {
@@ -14,20 +15,38 @@ export class Shape {
     }
   }
 
-  edges() {
+  vertices(origin: IShaped) {
     const out = [];
+    const { rotation, position, scaleX, scaleY } = origin;
 
     for (let i = 0; i < this.polygons.length; ++i) {
       const [x0, y0] = this.polygons[i];
-      const [x1, y1] = this.polygons[(i + 1) % this.polygons.length];
 
-      out.push(new Vector(x1 - x0, y1 - y0));
+      out.push(
+        new Vector(position.x + x0 * scaleX, position.y + y0 * scaleY).rotate(
+          rotation,
+          position
+        )
+      );
     }
 
     return out;
   }
 
-  normals() {
-    return this.edges().map(x => x.normal());
+  normals(origin: IShaped) {
+    const verts = this.vertices(origin);
+
+    const out = [];
+
+    for (let i = 1; i < verts.length; ++i) {
+      const v2 = verts[i];
+      const v1 = verts[i - 1];
+
+      out.push(v2.sub(v1));
+    }
+
+    out.push(verts[0].sub(verts[verts.length - 1]));
+
+    return out;
   }
 }

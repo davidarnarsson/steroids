@@ -5,18 +5,23 @@ import { Shape } from "../shape";
 
 export class Asteroid implements IEntity, IShaped {
   active: boolean = true;
-  public rotation: number = Math.random() * Math.PI * 0.1;
+  public rotation: number;
+
+  scaleX: number;
+  scaleY: number;
   rotationUpdater: () => number;
 
-  constructor(public position: Position, public velocity: Vector, public scale: number) {
-    const startRotation = 2 * Math.PI * Math.random();
+  constructor(public position: Vector, public velocity: Vector, scale: number) {
+    this.rotation = 2 * Math.PI * Math.random();
 
     this.rotationUpdater = fromTo(
-      startRotation,
-      startRotation + 2 * Math.PI,
+      this.rotation,
+      this.rotation + 2 * Math.PI,
       200 + Math.random() * 200,
       Ease.Linear
     );
+
+    this.scaleX = this.scaleY = scale;
   }
 
   update(context: UpdateContext) {
@@ -24,23 +29,11 @@ export class Asteroid implements IEntity, IShaped {
     this.rotation = this.rotationUpdater();
   }
 
-  shape = new Shape([
-    [-30, -20],
-    [-20, -22],
-    [5, -12],
-    [10, -3],
-    [12, 7],
-    [17, 15],
-    [13, 21],
-    [3, 22],
-    [-7, 13],
-    [-16, 6],
-    [-26, -2]
-  ]);
+  shape = new Shape([[-30, -30], [30, -30], [30, 30], [-30, 30]]);
 
   render(context: CanvasRenderingContext2D) {
     const draw = ([a, b]: number[]) => {
-      context.setTransform(this.scale, 0, 0, this.scale, a, b);
+      context.setTransform(this.scaleX, 0, 0, this.scaleY, a, b);
       context.rotate(this.rotation);
 
       context.fillStyle = "#c9c9c9";

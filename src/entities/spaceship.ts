@@ -10,13 +10,15 @@ const ROTATION_TICK = Math.PI / 45;
 const TWO_PI = 2 * Math.PI;
 
 export class Spaceship implements IEntity, IShaped {
+  scaleX: number = 1;
+  scaleY: number = 1;
   active: boolean = true;
   lastShotDt = Date.now();
   lastShotIdx = 0;
 
   constructor(
     public bullets: Bullet[],
-    public position: Position,
+    public position: Vector,
     public velocity: Vector,
     public rotation: number = 0
   ) {}
@@ -63,22 +65,7 @@ export class Spaceship implements IEntity, IShaped {
     }
   }
 
-  shape = new Shape([
-    [30, 0],
-    [10, 10],
-    [-20, 15],
-    [-40, 35],
-    [-40, 37],
-    [-40, 5],
-    [-45, 5],
-    [-45, -5],
-    [-40, -5],
-    [-40, -37],
-    [-40, -35],
-    [-20, -15],
-    [10, -10],
-    [30, 0]
-  ]);
+  shape = new Shape([[-10, -10], [10, -10], [10, 10], [-10, 10]]);
 
   render(context: CanvasRenderingContext2D): void {
     const draw = ([a, b]: number[]) => {

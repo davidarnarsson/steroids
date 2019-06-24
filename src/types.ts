@@ -1,4 +1,5 @@
 import { Shape } from "./shape";
+import { Vector } from "./vector";
 
 export interface IEntity {
   update(context: UpdateContext): void;
@@ -8,7 +9,10 @@ export interface IEntity {
 
 export interface IShaped {
   shape: Shape;
-  position: Position;
+  position: Vector;
+  rotation: number;
+  scaleX: number;
+  scaleY: number;
 }
 
 export class Position {

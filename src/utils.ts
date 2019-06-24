@@ -8,7 +8,7 @@ export function clamp(min: number, current: number, max: number) {
   return Math.min(max, Math.max(min, current));
 }
 
-export function updatePosition(ctx: UpdateContext, pos: Position, vec: Vector) {
+export function updatePosition(ctx: UpdateContext, pos: Vector, vec: Vector) {
   pos.x += ctx.dt * vec.x;
   pos.y += ctx.dt * vec.y;
 
@@ -38,7 +38,7 @@ export function pythagoras(a: number, b: number): number {
 }
 
 export function wrapDraw(
-  position: Position,
+  position: Vector,
   width: number,
   height: number,
   draw: (coords: number[]) => void

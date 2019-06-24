@@ -4,14 +4,18 @@ import { updatePosition } from "../utils";
 import { Shape } from "../shape";
 
 export class Bullet implements IEntity, IShaped {
+  scaleX: number = 1;
+  scaleY: number = 1;
   currentDistance = 0;
   active = false;
-  position: Position = new Position();
+  position: Vector = new Vector();
   firingVector: Vector = new Vector();
+  rotation: number = 0;
 
-  init(position: Position, firingVector: Vector) {
+  init(position: Vector, firingVector: Vector) {
     this.position = position;
     this.firingVector = firingVector;
+    this.rotation = firingVector.angle();
     this.active = true;
   }
 
@@ -28,7 +32,7 @@ export class Bullet implements IEntity, IShaped {
 
   render(context: CanvasRenderingContext2D) {
     context.setTransform(1, 0, 0, 1, this.position.x, this.position.y);
-    context.rotate(this.firingVector.angle());
+    context.rotate(this.rotation);
 
     context.beginPath();
 

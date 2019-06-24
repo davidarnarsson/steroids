@@ -9,7 +9,7 @@ export class Star implements IEntity {
 
   private _opacityUpdater: () => number;
 
-  constructor(public position: Position = new Position(), public velocity: Vector = new Vector()) {
+  constructor(public position: Vector = new Vector(), public velocity: Vector = new Vector()) {
     this._opacityUpdater = fromTo(0.2, 1.0, Math.random() * 5000, Ease.Power4, true);
   }
   update(ctx: UpdateContext): void {

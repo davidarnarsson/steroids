@@ -51,6 +51,10 @@ export class Spaceship implements IEntity, IShaped {
     if (keyboard[" "]) {
       this.fire();
     }
+
+    if (keyboard.s) {
+      this.velocity = this.velocity.mul(0);
+    }
   }
 
   fire() {

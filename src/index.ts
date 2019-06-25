@@ -37,7 +37,7 @@ function run() {
         new Vector(rand(), rand()).mul(0.2)
       )
   );
-  const asteroids = range(5).map(
+  const asteroids = range(1).map(
     x =>
       new Asteroid(
         new Vector(Math.random() * canvas.width, Math.random() * canvas.height),
@@ -64,6 +64,7 @@ function run() {
 
   let dt = Date.now();
 
+  
   function loop() {
     const currentTime = Date.now();
     const elapsed = currentTime - dt;

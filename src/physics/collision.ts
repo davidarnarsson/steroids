@@ -7,7 +7,7 @@ function minmaxProjects(vertices: Vector[], axis: Vector): [number, number] {
     maxVal: number = -Infinity;
 
   for (let vertex of vertices) {
-    const projected = vertex.project(axis).length();
+    const projected = axis.dot(vertex);
 
     minVal = Math.min(minVal, projected);
     maxVal = Math.max(maxVal, projected);
@@ -16,17 +16,24 @@ function minmaxProjects(vertices: Vector[], axis: Vector): [number, number] {
   return [minVal, maxVal];
 }
 
-function intersects(a: Vector[], b: Vector[], axis: Vector): boolean {
+function intersects(a: Vector[], b: Vector[], axis: Vector): number | null {
   const [aMin, aMax] = minmaxProjects(a, axis);
   const [bMin, bMax] = minmaxProjects(b, axis);
 
-  const result =
-    (bMin >= aMin && bMin <= aMax) || (bMax >= aMin && bMax <= aMax);
+  // coming in from "right"
+  if (bMin >= aMin && bMin <= aMax) {
+    return aMax - bMin;
+  }
 
-  return result;
+  // coming in from "left"
+  if (bMax >= aMin && bMax <= aMax) {
+    return bMax - aMin;
+  }
+
+  return null;
 }
 
-export function checkCollision(a: IShaped, b: IShaped) {
+export function checkCollision(a: IShaped, b: IShaped): Vector | null {
   const aEdges = a.shape.vertices(a);
   const bEdges = b.shape.vertices(b);
 
@@ -35,18 +42,24 @@ export function checkCollision(a: IShaped, b: IShaped) {
 
   const uniqueNormals = uniqWith(
     [...aNormals, ...bNormals],
-    (a, b) =>
-      round(b.x, 4) + round(a.x, 4) + (round(b.y, 4) + round(a.y, 4)) === 0
+    (a, b) => a.sub(b).length() <= 0.00001
   );
 
-  if (Date.now() % 100 === 0) {
-    console.log(uniqueNormals);
+  let smallestIntersection = Infinity,
+    smallestAxis = null;
+
+  for (let normal of uniqueNormals) {
+    const intersection = intersects(aEdges, bEdges, normal.unit());
+
+    if (!intersection) {
+      return null;
+    }
+
+    if (smallestIntersection > intersection) {
+      smallestIntersection = intersection;
+      smallestAxis = normal;
+    }
   }
 
-  const xAxis = new Vector(1, 0);
-  const yAxis = new Vector(0, 1);
-
-  if (intersects(aEdges, bEdges, yAxis) && intersects(aEdges, bEdges, xAxis)) {
-    console.log(`${typeof a} intersects ${typeof b}`);
-  }
+  return smallestAxis!.unit().mul(smallestIntersection);
 }

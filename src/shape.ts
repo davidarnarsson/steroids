@@ -15,19 +15,18 @@ export class Shape {
     }
   }
 
-  vertices(origin: IShaped) {
+  vertices(origin: IShaped, rotate: boolean = true) {
     const out = [];
     const { rotation, position, scaleX, scaleY } = origin;
 
     for (let i = 0; i < this.polygons.length; ++i) {
       const [x0, y0] = this.polygons[i];
 
-      out.push(
-        new Vector(position.x + x0 * scaleX, position.y + y0 * scaleY).rotate(
-          rotation,
-          position
-        )
-      );
+      out.push(new Vector(position.x + x0 * scaleX, position.y + y0 * scaleY));
+    }
+
+    if (rotate) {
+      return out.map(o => o.rotate(rotation, position));
     }
 
     return out;
@@ -42,10 +41,10 @@ export class Shape {
       const v2 = verts[i];
       const v1 = verts[i - 1];
 
-      out.push(v2.sub(v1));
+      out.push(v2.sub(v1).normal());
     }
 
-    out.push(verts[0].sub(verts[verts.length - 1]));
+    out.push(verts[0].sub(verts[verts.length - 1]).normal());
 
     return out;
   }

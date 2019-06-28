@@ -25,8 +25,8 @@ export class Asteroid implements IEntity, IShaped {
   }
 
   update(context: UpdateContext) {
-  //  updatePosition(context, this.position, this.velocity);
-    //this.rotation = this.rotationUpdater();
+    updatePosition(context, this.position, this.velocity);
+    this.rotation = this.rotationUpdater();
   }
 
   shape = new Shape([[-30, -30], [30, -30], [30, 30], [-30, 30]]);

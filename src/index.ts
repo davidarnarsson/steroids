@@ -37,7 +37,7 @@ function run() {
         new Vector(rand(), rand()).mul(0.2)
       )
   );
-  const asteroids = range(1).map(
+  const asteroids = range(5).map(
     x =>
       new Asteroid(
         new Vector(Math.random() * canvas.width, Math.random() * canvas.height),
@@ -60,34 +60,43 @@ function run() {
   stars.forEach(a => scene.add(a));
   asteroids.forEach(a => scene.add(a));
 
-  const solids = [...asteroids, ship, ...bullets];
-
   let dt = Date.now();
 
-  
   function loop() {
     const currentTime = Date.now();
     const elapsed = currentTime - dt;
-
-    for (let n = 0; n < solids.length; n++) {
-      if (!solids[n].active) continue;
-      for (let m = n + 1; m < solids.length; m++) {
-        if (
-          !solids[m].active ||
-          (solids[n] instanceof Asteroid && solids[m] instanceof Asteroid)
-        ) {
-          continue;
-        }
-
-        checkCollision(solids[n], solids[m]);
-      }
-    }
 
     scene.update({
       dt: elapsed,
       width: canvas.width,
       height: canvas.height
     });
+
+    for (let m = 0; m < asteroids.length; m++) {
+      if (!asteroids[m].active) {
+        continue;
+      }
+
+      const intersection = checkCollision(asteroids[m], ship);
+
+      if (intersection) {
+        ship.position = new Vector(canvas.width / 2, canvas.height / 2);
+      }
+
+      for (let b = 0; b < bullets.length; ++b) {
+        if (!bullets[b].active) {
+          continue;
+        }
+
+        const bulletIntersection = checkCollision(asteroids[m], bullets[b]);
+
+        if (bulletIntersection) {
+          console.log("BULLET HIT")
+          asteroids[m].active = false;
+          bullets[b].active = false;
+        }
+      }
+    }
 
     scene.render(context);
 

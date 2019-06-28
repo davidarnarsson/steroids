@@ -17,9 +17,9 @@ export class Scene implements IEntity {
 
   update(ctx: UpdateContext): void {
     for (let entity of this.entities) {
-      if (entity.active) {
-        entity.update(ctx);
-      }
+      if (!entity.active) continue;
+      
+      entity.update(ctx);
     }
   }
 
@@ -44,9 +44,9 @@ export class Scene implements IEntity {
 
   render(context: CanvasRenderingContext2D): void {
     for (let entity of this.entities) {
-      if (entity.active) {
-        entity.render(context);
-      }
+      if (!entity.active) continue;
+
+      entity.render(context);
 
       if (entity instanceof Asteroid) {
         const edges = entity.shape.vertices(entity);

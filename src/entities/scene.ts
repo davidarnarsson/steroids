@@ -1,7 +1,8 @@
-import { IEntity, UpdateContext } from "../types";
-import { remove } from "lodash";
-import { Asteroid } from "./asteroid";
-import { Vector } from "../vector";
+import { IEntity, UpdateContext } from '../types';
+import { remove } from 'lodash';
+import { Asteroid } from './asteroid';
+import { Vector } from '../vector';
+import { World } from 'planck-js';
 
 export class Scene implements IEntity {
   active: boolean = true;
@@ -18,18 +19,14 @@ export class Scene implements IEntity {
   update(ctx: UpdateContext): void {
     for (let entity of this.entities) {
       if (!entity.active) continue;
-      
+
       entity.update(ctx);
     }
   }
 
-  renderNormal(
-    context: CanvasRenderingContext2D,
-    position: Vector,
-    normal: Vector
-  ) {
+  renderNormal(context: CanvasRenderingContext2D, position: Vector, normal: Vector) {
     context.beginPath();
-    context.strokeStyle = "#f0f";
+    context.strokeStyle = '#f0f';
     context.setTransform(1, 0, 0, 1, position.x, position.y);
     context.rotate(normal.angle());
 
